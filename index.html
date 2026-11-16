@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkedBeats</title>
+    <meta
+      name="description"
+      content="LinkedBeats - Music Playlist Manager Using Doubly Linked List"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <nav class="nav container" aria-label="Main navigation">
+          <div class="brand-wrap">
+            <div class="brand-mark">LB</div>
+            <div>
+              <div class="brand-title">LinkedBeats</div>
+              <div class="brand-subtitle">Music Playlist Manager</div>
+            </div>
+          </div>
+
+          <div class="nav-links">
+            <a href="#playlist-section">Playlist</a>
+            <a href="#visualizer-section">Linked List Visualizer</a>
+            <a href="#algorithms-section">Algorithms</a>
+            <a href="#about-section">About Project</a>
+          </div>
+        </nav>
+      </header>
+
+      <main class="container">
+        <section class="hero panel">
+          <div class="hero-copy">
+            <p class="eyebrow">Doubly Linked List • Data Structures Microproject</p>
+            <h1>LinkedBeats</h1>
+            <p class="hero-text">
+              Manage a playlist using a real doubly linked list, visualize pointer updates,
+              and learn how linked-list operations power playlist navigation.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#playlist-section">Open Playlist</a>
+              <a class="button secondary" href="#visualizer-section">View Structure</a>
+            </div>
+          </div>
+
+          <div class="hero-stat-grid">
+            <div class="stat-card">
+              <span class="stat-label">Total Songs</span>
+              <strong id="totalSongsStat">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Current Position</span>
+              <strong id="currentPositionStat">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Integrity</span>
+              <strong id="integrityStat">OK</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="player-layout">
+          <div class="panel player-section" aria-label="Music player">
+            <div class="player-art" id="albumArt">
+              <span>♪</span>
+            </div>
+
+            <div class="player-meta">
+              <p class="eyebrow">Now Playing</p>
+              <h2 id="currentSongTitle">Select a song</h2>
+              <p id="currentSongArtist">Artist name</p>
+            </div>
+
+            <div class="player-controls">
+              <button class="control-btn" id="prevTrackBtn" aria-label="Previous song">⏮</button>
+              <button class="control-btn play-btn" id="playPauseBtn" aria-label="Play or pause">▶</button>
+              <button class="control-btn" id="nextTrackBtn" aria-label="Next song">⏭</button>
+            </div>
+
+            <div class="progress-wrap">
+              <div class="progress-meta">
+                <span id="currentTime">0:00</span>
+                <span id="totalDuration">0:00</span>
+              </div>
+              <input type="range" id="progressBar" min="0" max="100" step="0.1" value="0" />
+            </div>
+
+            <div class="volume-wrap">
+              <label for="volumeControl">Volume</label>
+              <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.8" />
+            </div>
+          </div>
+        </section>
+
+        <section id="playlist-section" class="content-grid">
+          <div class="panel form-panel">
+            <div class="section-heading">
+              <h3>Playlist Manager</h3>
+            </div>
+
+            <form id="songForm" class="song-form">
+              <div class="field-row">
+                <label>
+                  Song title
+                  <input type="text" id="songTitle" placeholder="Enter song title" required />
+                </label>
+                <label>
+                  Artist
+                  <input type="text" id="songArtist" placeholder="Enter artist name" required />
+                </label>
+              </div>
+
+              <div class="field-row">
+                <label>
+                  Duration (seconds)
+                  <input type="number" id="songDuration" placeholder="180" min="1" step="1" required />
+                </label>
+                <label>
+                  Position (optional)
+                  <input type="number" id="songPosition" placeholder="1" min="1" step="1" />
+                </label>
+              </div>
+
+              <label>
+                Audio URL (optional)
+                <input type="url" id="songAudioUrl" placeholder="https://example.com/song.mp3" />
+              </label>
+
+              <div id="formMessage" class="message" aria-live="polite"></div>
+
+              <div class="button-row">
+                <button type="submit" class="button primary">Add Song</button>
+                <button type="button" class="button soft" id="clearPlaylistBtn">Clear Playlist</button>
+                <button type="button" class="button soft" id="uploadMusicBtn">Upload Music</button>
+                <input type="file" id="musicUploadInput" accept="audio/mpeg,audio/wav,audio/ogg,audio/mp4,audio/x-m4a,.mp3,.wav,.ogg,.m4a" hidden />
+              </div>
+            </form>
+
+            <div class="search-row">
+              <input id="searchInput" type="search" placeholder="Search playlist by title" />
+              <div class="mini-button-row">
+                <button type="button" class="button soft" id="searchSongBtn">Search Song</button>
+                <button type="button" class="button soft" id="deleteFirstBtn">Delete First</button>
+                <button type="button" class="button soft" id="deleteLastBtn">Delete Last</button>
+                <button type="button" class="button soft" id="undoBtn">Undo</button>
+                <button type="button" class="button soft" id="redoBtn">Redo</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel playlist-panel">
+            <div class="section-heading">
+              <h3>Playlist</h3>
+            </div>
+
+            <div class="playlist-table-wrap">
+              <table class="playlist-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Song</th>
+                    <th>Artist</th>
+                    <th>Duration</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="playlistTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="visualizer-section" class="panel visualizer-panel">
+          <div class="section-heading">
+            <h3>Linked List Visualizer</h3>
+          </div>
+
+          <div class="visualizer-summary">
+            <span>Head</span>
+            <span>Current</span>
+            <span>Tail</span>
+            <span id="nodeCountLabel">0 nodes</span>
+          </div>
+
+          <div id="linkedListVisualizer" class="visualizer" aria-live="polite"></div>
+        </section>
+
+        <section id="algorithms-section" class="panel algorithms-panel">
+          <div class="section-heading">
+            <h3>Algorithms and Complexity</h3>
+          </div>
+
+          <div class="algorithm-grid">
+            <article>
+              <h4>What is a Doubly Linked List?</h4>
+              <p>
+                A doubly linked list is a linear data structure in which each node stores a
+                reference to the previous and next node. This makes forward and backward
+                traversal efficient and supports insertion and deletion at both ends.
+              </p>
+            </article>
+
+            <article>
+              <h4>Why it suits playlists</h4>
+              <p>
+                Playlists need fast navigation, insertion, and deletion around the current
+                track. The list structure stores songs in order while allowing easy movement
+                between songs with a current pointer.
+              </p>
+            </article>
+
+            <article>
+              <h4>Complexity Summary</h4>
+              <ul>
+                <li>Insert at head: O(1)</li>
+                <li>Insert at tail with tail pointer: O(1)</li>
+                <li>Delete head: O(1)</li>
+                <li>Delete tail with tail pointer: O(1)</li>
+                <li>Search: O(n)</li>
+                <li>Insert at arbitrary position: O(n)</li>
+                <li>Forward traversal: O(n)</li>
+                <li>Backward traversal: O(n)</li>
+                <li>Next/Previous using current pointer: O(1)</li>
+                <li>Storage: O(n)</li>
+              </ul>
+            </article>
+
+            <article>
+              <h4>Pseudocode</h4>
+              <pre>
+if currentNode != null:
+    next = currentNode.next
+    current = next
+
+if targetPosition == 1:
+    insert before head
+else:
+    locate node at targetPosition
+    update prev and next links
+              </pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel log-panel">
+          <div class="section-heading">
+            <h3>Operation Log</h3>
+          </div>
+          <div id="operationLog" class="operation-log" aria-live="polite"></div>
+        </section>
+
+        <section class="panel deleted-panel">
+          <div class="section-heading">
+            <h3>Recently Deleted</h3>
+          </div>
+          <div id="recentlyDeletedList" class="recently-deleted-list"></div>
+        </section>
+
+        <section id="about-section" class="panel about-panel">
+          <div class="section-heading">
+            <h3>About Project</h3>
+          </div>
+
+          <div class="about-grid">
+            <div>
+              <p><strong>Project Title:</strong> Music Playlist Manager Using Doubly Linked List</p>
+              <p><strong>Course:</strong> Data Structures</p>
+              <p><strong>Institution:</strong> VESIT</p>
+              <p><strong>Project Type:</strong> Second-Year Computer Engineering Microproject</p>
+            </div>
+
+            <div class="placeholders">
+              <h4>Academic Placeholders</h4>
+              <ul>
+                <li>Student Name: Shashank Mishra</li>
+                <li>Roll Number: 41</li>
+                <li>Class / Division: D7C</li>
+                <li>Academic Year: 2026-27</li>
+                <li>Faculty Mentor: Mrs. Vidya Zope</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
